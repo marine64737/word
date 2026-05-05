@@ -52,6 +52,6 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            sudo fuser -k 8080/tcp || true
+            sudo fuser -k 8081/tcp || true
             cd /home/ksh/ksh
             docker compose up -d --build
