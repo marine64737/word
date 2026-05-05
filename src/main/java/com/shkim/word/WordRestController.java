@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "https://marine64737.github.io")
+
 @RestController
 public class WordRestController {
     @Autowired
@@ -23,15 +23,16 @@ public class WordRestController {
     }
 
     @GetMapping("/word/all/shuffled")
-    ResponseEntity<List<Word>> callShuffledAll(){
-        List<Integer> idList = wordRepository.findIds();
-        Collections.shuffle(idList);
-        List<Integer> targetIds = idList.stream().limit(20).collect(Collectors.toList());
-
-        List<Word> words = wordRepository.findAllById(targetIds);
-
-        Collections.shuffle(words);
-        return ResponseEntity.ok(words);
+    ResponseEntity<?> callShuffledAll(){
+//        List<Integer> idList = wordRepository.findIds();
+//        Collections.shuffle(idList);
+//        List<Integer> targetIds = idList.stream().limit(20).collect(Collectors.toList());
+//
+//        List<Word> words = wordRepository.findAllById(targetIds);
+//
+//        Collections.shuffle(words);
+//        return ResponseEntity.ok().body(new APIResponse<>(true, "success", words));
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.findShuffled()));
     }
     @PostMapping("/word/check")
     ResponseEntity<?> checkWord(@RequestBody Word word){
@@ -49,15 +50,16 @@ public class WordRestController {
         }
 
         if (isDuplicate) {
-            return ResponseEntity.badRequest().body("이미 등록된 단어입니다.");
+            return ResponseEntity.badRequest().body(new APIResponse<>(false, "이미 등록된 단어입니다.", null));
         }
 
-        return ResponseEntity.ok().body("등록되지 않은 단어입니다.");
+        return ResponseEntity.ok().body(new APIResponse<>(false, "등록되지 않은 단어입니다.", null));
     }
 
     @Transactional
     @PostMapping("/word/save")
     ResponseEntity<?> saveWord(@RequestBody Word word){
+
         boolean isDuplicate;
 
         if (word.getKanji() == null || word.getKanji().isEmpty()) {
@@ -69,16 +71,16 @@ public class WordRestController {
         }
 
         if (isDuplicate) {
-            return ResponseEntity.badRequest().body("이미 등록된 단어입니다.");
+            return ResponseEntity.badRequest().body(new APIResponse<>(false, "이미 존재하는 단어입니다.", null));
         }
 
         wordRepository.save(word);
-        return ResponseEntity.ok(word);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "저장 성공", word));
     }
 
     @GetMapping("/word/total")
-    ResponseEntity<Long> total(){
-        return ResponseEntity.ok(wordRepository.count());
+    ResponseEntity<?> total(){
+        return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", wordRepository.count()));
     }
 
 //    @PostMapping("/word/search")
@@ -95,15 +97,15 @@ public class WordRestController {
 
         // 리스트가 null이거나 비어있는지 확인
         if (words == null || words.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 단어가 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(false, "해당하는 단어가 없습니다.", null));
         }
-        return ResponseEntity.ok(words);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", words));
     }
 
     @Transactional
     @PostMapping("/word/update")
     ResponseEntity<?> update(@RequestBody Word word){
         wordRepository.save(word);
-        return ResponseEntity.ok(word);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", word));
     }
 }
