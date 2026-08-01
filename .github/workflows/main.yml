@@ -27,6 +27,5 @@ jobs:
         run: |
           fuser -k 8081/tcp || true
           cp build/libs/*.jar /home/ksh/ksh/Word/build/libs
-          cp -r . /home/ksh/ksh/Word/code
           cd /home/ksh/ksh
           docker compose up -d --build
