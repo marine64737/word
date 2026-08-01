@@ -25,7 +25,6 @@ jobs:
 
       - name: Deploy
         run: |
-          cd /home/ksh/ksh/Word
           fuser -k 8081/tcp || true
           cp build/libs/*.jar /home/ksh/ksh/Word/build/libs
           cp -r . /home/ksh/ksh/Word/code
