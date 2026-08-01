@@ -22,11 +22,3 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build -x test
-
-      - name: Execute Server Script
-        run: |
-          sudo fuser -k 8081/tcp || true
-          cp build/libs/*.jar /home/ksh/ksh/Word/
-          cp -r . /home/ksh/ksh/Word/code
-          cd /home/ksh/ksh
-          docker compose up -d --build
