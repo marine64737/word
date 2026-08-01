@@ -1,6 +1,7 @@
 package com.shkim.word;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +13,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @RestController
 public class WordRestController {
     @Autowired
     WordRepository wordRepository;
 
-    @GetMapping("/word/all")
+    @GetMapping("/all")
     List<Word> callAll(){
         return wordRepository.findAll();
     }
 
-    @GetMapping("/word/all/shuffled")
+    @GetMapping("/all/shuffled")
     ResponseEntity<?> callShuffledAll(){
+        List<Word> wordList = wordRepository.findShuffled();
+        wordList.forEach(word -> word.setState(true));
+        wordRepository.saveAll(wordList);
+        if (wordRepository.wordsNum() == wordRepository.passedWordsNum()) wordRepository.init();
 //        List<Integer> idList = wordRepository.findIds();
 //        Collections.shuffle(idList);
 //        List<Integer> targetIds = idList.stream().limit(20).collect(Collectors.toList());
@@ -32,9 +38,13 @@ public class WordRestController {
 //
 //        Collections.shuffle(words);
 //        return ResponseEntity.ok().body(new APIResponse<>(true, "success", words));
-        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.findShuffled()));
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
-    @PostMapping("/word/check")
+//    @GetMapping("/word/passnum")
+//    ResponseEntity<?> passNum(){
+//        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
+//    }
+    @PostMapping("/check")
     ResponseEntity<?> checkWord(@RequestBody Word word){
         boolean isDuplicate;
 
@@ -57,7 +67,7 @@ public class WordRestController {
     }
 
     @Transactional
-    @PostMapping("/word/save")
+    @PostMapping("/save")
     ResponseEntity<?> saveWord(@RequestBody Word word){
 
         boolean isDuplicate;
@@ -78,7 +88,7 @@ public class WordRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "저장 성공", word));
     }
 
-    @GetMapping("/word/total")
+    @GetMapping("/total")
     ResponseEntity<?> total(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", wordRepository.count()));
     }
@@ -90,7 +100,7 @@ public class WordRestController {
 //        return (words == null)? ResponseEntity.badRequest().body("해당하는 단어가 없습니다.") :
 //                ResponseEntity.ok(words);
 //    }
-    @PostMapping("/word/search")
+    @PostMapping("/search")
     public ResponseEntity<?> search(@RequestBody Map<String, String> payload) {
         String kanji = payload.get("kanji"); // JSON에서 "kanji" 키의 값만 추출
         List<Word> words = wordRepository.findByKanjiContaining(kanji);
@@ -103,7 +113,7 @@ public class WordRestController {
     }
 
     @Transactional
-    @PostMapping("/word/update")
+    @PostMapping("/update")
     ResponseEntity<?> update(@RequestBody Word word){
         wordRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", word));

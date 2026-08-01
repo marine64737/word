@@ -1,7 +1,9 @@
 package com.shkim.word;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +24,17 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     // 한자가 없는 경우(null)를 대비한 체크
     boolean existsByKanjiIsNullAndReading(String reading);
 
-    @Query(value = "SELECT * FROM word ORDER BY random() LIMIT 20", nativeQuery = true)
+    @Query(value = "SELECT * FROM word where state = false ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findShuffled();
+
+    @Query(value = "SELECT count(*) FROM word", nativeQuery = true)
+    int wordsNum();
+
+    @Query(value = "SELECT count(*) FROM word where state = true", nativeQuery = true)
+    int passedWordsNum();
+
+    @Transactional
+    @Modifying
+    @Query(value = "update word set state = false", nativeQuery = true)
+    void init();
 }

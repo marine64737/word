@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Word</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        nav { background-color: #04fff2; font-weight: bold; padding: 10px; text-align: left; margin-bottom: 40px;}
+        nav a { color: black; margin: 0 15px; text-decoration: none; font-size: 18px; padding: 10px;}
+        nav a:hover {  background-color: #ffcc00; padding: 10px;}
+        h1, h2 {
+            color: #333;
+        }
+        .profile{
+            display: flex;
+            align-items: center;
+        }
+        .profile img{
+            /*border-radius: 60%;*/
+            width: 240px;
+            margin-right: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        table, td, th{
+            border:1px solid #bbb;
+        }
+        td, th{
+            padding: 10px;
+            text-align: center;
+        }
+        form{
+            margin-top: 30px;
+        }
+        input, textarea{
+            width: 300px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        table {
+            table-layout: fixed; /* 테이블 레이아웃 고정 */
+            width: 100%;        /* 전체 너비 지정 */
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <h1>Word</h1>
+    <h2>일본어 단어장 <span id="total-count" style="font-size: 0.5em; color: gray;"></span>
+    <span style="font-size: 0.5em; color: gray;">source: github.com/elzup/jlpt-word-list/blob/master/out/all.csv#L1</span>
+</h2>
+<!--    <h2>확인한 단어 <span id="pass-count" style="font-size: 0.5em; color: gray;"></span></h2>-->
+    <div class="hidden input-group">
+        <h2>단어 추가</h2>
+        <input type="text" id="kanji" placeholder="한자 (Kanji)">
+        <input type="text" id="reading" placeholder="읽기 (Reading)">
+        <input type="text" id="meaning" placeholder="의미 (Meaning)">
+        <button onclick="checkWord()">중복확인</button>
+        <button onclick="saveWord()">저장하기</button>
+        <span id="message-area" style="margin-left: 10px;"></span>
+    </div>
+    <div class="search">
+        <h2>단어 수정</h2>
+        <input type="text" id="search-kanji" placeholder="한자 (Kanji)">
+        <button onclick="searchWord()">검색</button>
+        <button class="hidden" id="cancel" onclick="cancel(this)">취소</button>
+        <button class="hidden" id="clear" onclick="clearInput(this)">클리어</button>
+        <span id="search-message" style="margin-left: 10px;"></span>
+    </div>
+    <div id="search-result"></div>
+    <button onclick="refresh()" style="font-size: 2em;">새로고침</button>
+    <table border="1">
+        <colgroup>
+            <col style="width: 10%;"> <!-- 한자 (작게) -->
+            <col style="width: 10%;"> <!-- 읽기 (적당히) -->
+            <col style="width: auto;"> <!-- 영어 뜻 (가장 넓게) -->
+            <col style="width: auto;"> <!-- 영어 뜻 (가장 넓게) -->
+        </colgroup>
+    <thead>
+        <tr>
+            <th>한자 (Kanji)</th>
+            <th>읽기 (Reading)</th>
+            <th>의미 (Meaning, Kor)</th>
+            <th>의미 (Meaning, Eng)</th>
+        </tr>
+    </thead>
+    <tbody id="word-list">
+    </tbody>
+</table>
+<button onclick="refresh()" style="font-size: 2em;">새로고침</button>
+<script src="word.js"></script>
+
+</body>
+</html>
