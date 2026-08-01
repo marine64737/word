@@ -22,3 +22,14 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build -x test
+
+      - name: Deploy
+        run: |
+          cd /home/ksh/ksh/Word
+          sudo chown -R ksh:ksh .
+          sudo chown -R 999:999 ./data
+          sudo fuser -k 8081/tcp || true
+          cp build/libs/*.jar /home/ksh/ksh/Word/build/libs
+          cp -r . /home/ksh/ksh/Word/code
+          cd /home/ksh/ksh
+          docker compose up -d --build
