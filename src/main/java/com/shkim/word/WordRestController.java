@@ -19,12 +19,12 @@ public class WordRestController {
     @Autowired
     WordRepository wordRepository;
 
-    @GetMapping("/all")
+    @GetMapping("/api/all")
     List<Word> callAll(){
         return wordRepository.findAll();
     }
 
-    @GetMapping("/all/shuffled")
+    @GetMapping("/api/all/shuffled")
     ResponseEntity<?> callShuffledAll(){
         List<Word> wordList = wordRepository.findShuffled();
         wordList.forEach(word -> word.setState(true));
@@ -44,7 +44,7 @@ public class WordRestController {
 //    ResponseEntity<?> passNum(){
 //        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
 //    }
-    @PostMapping("/check")
+    @PostMapping("/api/check")
     ResponseEntity<?> checkWord(@RequestBody Word word){
         boolean isDuplicate;
 
@@ -67,7 +67,7 @@ public class WordRestController {
     }
 
     @Transactional
-    @PostMapping("/save")
+    @PostMapping("/api/save")
     ResponseEntity<?> saveWord(@RequestBody Word word){
 
         boolean isDuplicate;
@@ -88,7 +88,7 @@ public class WordRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "저장 성공", word));
     }
 
-    @GetMapping("/total")
+    @GetMapping("/api/total")
     ResponseEntity<?> total(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", wordRepository.count()));
     }
@@ -100,7 +100,7 @@ public class WordRestController {
 //        return (words == null)? ResponseEntity.badRequest().body("해당하는 단어가 없습니다.") :
 //                ResponseEntity.ok(words);
 //    }
-    @PostMapping("/search")
+    @PostMapping("/api/search")
     public ResponseEntity<?> search(@RequestBody Map<String, String> payload) {
         String kanji = payload.get("kanji"); // JSON에서 "kanji" 키의 값만 추출
         List<Word> words = wordRepository.findByKanjiContaining(kanji);
@@ -113,7 +113,7 @@ public class WordRestController {
     }
 
     @Transactional
-    @PostMapping("/update")
+    @PostMapping("/api/update")
     ResponseEntity<?> update(@RequestBody Word word){
         wordRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", word));

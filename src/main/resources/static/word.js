@@ -1,6 +1,6 @@
 async function findAll() {
     // 1. API 주소 설정 (절대 경로 또는 상대 경로)
-    const uri = "/word/all/shuffled";
+    const uri = "/word/api/all/shuffled";
     const listContainer = document.getElementById('word-list');
 
     try {
@@ -50,7 +50,7 @@ async function findAll() {
 }
 
 async function updateWordCount() {
-    const response = await fetch("/word/total", {
+    const response = await fetch("/word/api/total", {
         headers: { 'ngrok-skip-browser-warning': 'any' }
     });
     const res = await response.json();
@@ -67,6 +67,7 @@ async function updateWordCount() {
 }*/
 async function saveWord() {
     //const uri =  "https://arguably-harmonics-swab.ngrok-free.dev/word/save";
+    const uri =  "/word/api/save";
     const kanji = document.getElementById('kanji').value;
     const reading = document.getElementById('reading').value;
     const meaning = document.getElementById('meaning').value;
@@ -184,7 +185,7 @@ async function checkWord() {
 
 async function searchWord() {
     //const uri = "https://arguably-harmonics-swab.ngrok-free.dev/word/search";
-    const uri = "/word/search";
+    const uri = "/word/api/search";
     const kanji = document.getElementById('search-kanji').value;
     const searchContainer = document.getElementById('search-result');
     if (!kanji) {
@@ -253,7 +254,7 @@ async function searchWord() {
 
 async function updateWord(btn){
     //const uri = "https://arguably-harmonics-swab.ngrok-free.dev/word/update";
-    const uri = "/word/update";
+    const uri = "/word/api/update";
     const row = btn.parentElement; // 버튼이 속한 div를 찾음
     const inputs = row.querySelectorAll('input'); // 그 안의 모든 input 찾기
     const cancel = document.getElementById('cancel');
