@@ -26,10 +26,12 @@ async function findAll() {
             
             // API 구조: { kanji: "...", reading: "...", meaning: "..." }
             row.innerHTML = `
+                <input type="hidden" class="row-id" value=${word.id}>
                 <td style="font-size: 48px;">${word.kanji}</td>
                 <td><span style="font-size: 20px;">${word.reading}</span>
                 <td style="text-align: left;">${word.kormeaning}</td>
                 <td style="text-align: left;">${word.meaning}</td>
+                <td><button onclick="anki(this)" id="anki">암기</td>
             `;
 
 /*             row.innerHTML = `
@@ -313,7 +315,36 @@ async function updateWord(btn){
         alert("서버와 통신할 수 없습니다.");
     }
 }
+async function anki(btn){
+    const uri = "/word/api/anki";
+    const row = btn.closest('tr');
+    const input_id = row.querySelector('.row-id');
 
+    try{
+        const response = await fetch(uri, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'any'
+            },
+            body: input_id.value
+        });
+        if (response.ok) {
+            btn.classList.add('hidden');
+            const msgArea = document.getElementById('search-message');
+            msgArea.innerText = "암기 완료!";
+            msgArea.style.color = "green";
+            setTimeout(() => { msgArea.innerText = ""; }, 3000);
+        }
+        else {
+            alert("확인 실패 (서버 오류)");
+        }
+    }
+    catch (e) {
+        console.error("확인 중 에러:", e);
+        alert("서버와 통신할 수 없습니다.");
+    }
+}
 function cancel(btn){
     const target = document.getElementById('search-result');
     target.innerHTML = ``;

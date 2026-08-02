@@ -118,4 +118,12 @@ public class WordRestController {
         wordRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", word));
     }
+
+    @PostMapping("/api/anki")
+    ResponseEntity<?> anki(@RequestBody int id){
+        Word word = wordRepository.findById(id).orElseThrow();
+        word.setAnki(true);
+        wordRepository.save(word);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", word));
+    }
 }

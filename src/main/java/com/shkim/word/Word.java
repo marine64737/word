@@ -19,17 +19,19 @@ public class Word {
     private String kormeaning;
     private int number;
     private boolean state;
+    private boolean anki;
 
     public Word() {
     }
 
-    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean state){
+    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean state, boolean anki){
         this.id = id;
         this.kanji = kanji;
         this.reading = reading;
         this.meaning = meaning;
         this.kormeaning = kormeaning;
         this.state = state;
+        this.anki = anki;
     }
 
     public int getId(){
@@ -86,5 +88,13 @@ public class Word {
 
     public void setKormeaning(String kormeaning) {
         this.kormeaning = kormeaning;
+    }
+
+    public boolean isAnki() {
+        return anki;
+    }
+
+    public void setAnki(boolean anki) {
+        this.anki = anki;
     }
 }
