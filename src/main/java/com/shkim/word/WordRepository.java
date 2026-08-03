@@ -37,4 +37,9 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     @Modifying
     @Query(value = "update word set state = false where anki = false", nativeQuery = true)
     void init();
+
+    @Transactional
+    @Modifying
+    @Query(value = "update word set anki = false", nativeQuery = true)
+    void ankiInit();
 }

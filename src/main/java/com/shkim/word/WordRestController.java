@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
 public class WordRestController {
@@ -125,5 +125,11 @@ public class WordRestController {
         word.setAnki(true);
         wordRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", word));
+    }
+    @Transactional
+    @PostMapping("/word/init")
+    ResponseEntity<?> ankiInit(){
+        wordRepository.ankiInit();
+        return ResponseEntity.ok().body(new APIResponse<>(true, "암기 초기화 완료", true));
     }
 }
