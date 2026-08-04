@@ -40,10 +40,10 @@ public class WordRestController {
 //        return ResponseEntity.ok().body(new APIResponse<>(true, "success", words));
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
-//    @GetMapping("/word/passnum")
-//    ResponseEntity<?> passNum(){
-//        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
-//    }
+    @GetMapping("/word/passnum")
+    ResponseEntity<?> passNum(){
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
+    }
     @PostMapping("/api/check")
     ResponseEntity<?> checkWord(@RequestBody Word word){
         boolean isDuplicate;
