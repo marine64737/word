@@ -43,6 +43,10 @@ public class WordRestController {
     ResponseEntity<?> passNum(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
     }
+    @GetMapping("/api/ankinum")
+    ResponseEntity<?> ankiNum(){
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.ankiWordsNum()));
+    }
     @PostMapping("/api/check")
     ResponseEntity<?> checkWord(@RequestBody Word word){
         boolean isDuplicate;

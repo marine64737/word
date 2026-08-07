@@ -39,6 +39,9 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     @Query(value = "SELECT count(*) FROM word where loop = true", nativeQuery = true)
     int loopWordsNum();
 
+    @Query(value = "SELECT count(*) FROM word where anki = true", nativeQuery = true)
+    int ankiWordsNum();
+
     @Transactional
     @Modifying
     @Query(value = "update word set state = false where anki = false and loop = true", nativeQuery = true)
