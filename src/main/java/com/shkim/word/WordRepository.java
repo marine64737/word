@@ -27,15 +27,21 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     @Query(value = "SELECT * FROM word where state = false and anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findShuffled();
 
+    @Query(value = "SELECT * FROM word where state = false and anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
+    List<Word> findLoopShuffled();
+
     @Query(value = "SELECT count(*) FROM word", nativeQuery = true)
     int wordsNum();
 
-    @Query(value = "SELECT count(*) FROM word where state = true", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM word where state = true and loop = true", nativeQuery = true)
     int passedWordsNum();
+
+    @Query(value = "SELECT count(*) FROM word where loop = true", nativeQuery = true)
+    int loopWordsNum();
 
     @Transactional
     @Modifying
-    @Query(value = "update word set state = false where anki = false", nativeQuery = true)
+    @Query(value = "update word set state = false where anki = false and loop = true", nativeQuery = true)
     void init();
 
     @Transactional

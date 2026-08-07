@@ -26,18 +26,17 @@ public class WordRestController {
 
     @GetMapping("/api/all/shuffled")
     ResponseEntity<?> callShuffledAll(){
-        List<Word> wordList = wordRepository.findShuffled();
+        List<Word> wordList;
+        if (wordRepository.loopWordsNum() >= 90){
+            wordList = wordRepository.findLoopShuffled();
+        }
+        else {
+            wordList = wordRepository.findShuffled();
+            wordList.forEach(word -> word.setLoop(true));
+        }
         wordList.forEach(word -> word.setState(true));
         wordRepository.saveAll(wordList);
-        if (wordRepository.wordsNum() == wordRepository.passedWordsNum()) wordRepository.init();
-//        List<Integer> idList = wordRepository.findIds();
-//        Collections.shuffle(idList);
-//        List<Integer> targetIds = idList.stream().limit(20).collect(Collectors.toList());
-//
-//        List<Word> words = wordRepository.findAllById(targetIds);
-//
-//        Collections.shuffle(words);
-//        return ResponseEntity.ok().body(new APIResponse<>(true, "success", words));
+        if (wordRepository.loopWordsNum() == wordRepository.passedWordsNum()) wordRepository.init();
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
     @GetMapping("/api/passnum")
@@ -122,7 +121,9 @@ public class WordRestController {
     @PostMapping("/api/anki")
     ResponseEntity<?> anki(@RequestBody int id){
         Word word = wordRepository.findById(id).orElseThrow();
+        word.setState(true);
         word.setAnki(true);
+        word.setLoop(false);
         wordRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", word));
     }
