@@ -18,20 +18,19 @@ public class Word {
     private String meaning;
     private String kormeaning;
     private int number;
-    private boolean state;
+//    private boolean state;
     private boolean anki;
     private boolean loop;
 
     public Word() {
     }
 
-    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean state, boolean anki, boolean loop){
+    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean anki, boolean loop){
         this.id = id;
         this.kanji = kanji;
         this.reading = reading;
         this.meaning = meaning;
         this.kormeaning = kormeaning;
-        this.state = state;
         this.anki = anki;
         this.loop = loop;
     }
@@ -76,13 +75,13 @@ public class Word {
         this.number = number;
     }
 
-    public boolean isState() {
-        return state;
-    }
-
-    public void setState(boolean state) {
-        this.state = state;
-    }
+//    public boolean isState() {
+//        return state;
+//    }
+//
+//    public void setState(boolean state) {
+//        this.state = state;
+//    }
 
     public String getKormeaning() {
         return kormeaning;
