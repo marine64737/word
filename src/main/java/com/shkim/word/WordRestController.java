@@ -34,15 +34,14 @@ public class WordRestController {
             wordList = wordRepository.findShuffled();
             wordList.forEach(word -> word.setLoop(true));
         }
-        wordList.forEach(word -> word.setState(true));
         wordRepository.saveAll(wordList);
-        if (wordRepository.loopWordsNum() == wordRepository.passedWordsNum()) wordRepository.init();
+//        if (wordRepository.loopWordsNum() == wordRepository.passedWordsNum()) wordRepository.init();
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
-    @GetMapping("/api/passnum")
-    ResponseEntity<?> passNum(){
-        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
-    }
+//    @GetMapping("/api/passnum")
+//    ResponseEntity<?> passNum(){
+//        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
+//    }
     @GetMapping("/api/ankinum")
     ResponseEntity<?> ankiNum(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.ankiWordsNum()));
@@ -125,7 +124,6 @@ public class WordRestController {
     @PostMapping("/api/anki")
     ResponseEntity<?> anki(@RequestBody int id){
         Word word = wordRepository.findById(id).orElseThrow();
-        word.setState(true);
         word.setAnki(true);
         word.setLoop(false);
         wordRepository.save(word);

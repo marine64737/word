@@ -24,17 +24,17 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     // 한자가 없는 경우(null)를 대비한 체크
     boolean existsByKanjiIsNullAndReading(String reading);
 
-    @Query(value = "SELECT * FROM word where state = false and anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT * FROM word where anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findShuffled();
 
-    @Query(value = "SELECT * FROM word where state = false and anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT * FROM word where anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findLoopShuffled();
 
     @Query(value = "SELECT count(*) FROM word", nativeQuery = true)
     int wordsNum();
 
-    @Query(value = "SELECT count(*) FROM word where state = true and loop = true", nativeQuery = true)
-    int passedWordsNum();
+//    @Query(value = "SELECT count(*) FROM word where loop = true", nativeQuery = true)
+//    int passedWordsNum();
 
     @Query(value = "SELECT count(*) FROM word where loop = true", nativeQuery = true)
     int loopWordsNum();
@@ -42,10 +42,10 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     @Query(value = "SELECT count(*) FROM word where anki = true", nativeQuery = true)
     int ankiWordsNum();
 
-    @Transactional
-    @Modifying
-    @Query(value = "update word set state = false where anki = false and loop = true", nativeQuery = true)
-    void init();
+//    @Transactional
+//    @Modifying
+//    @Query(value = "update word set state = false where anki = false and loop = true", nativeQuery = true)
+//    void init();
 
     @Transactional
     @Modifying
