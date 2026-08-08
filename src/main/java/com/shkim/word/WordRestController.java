@@ -35,7 +35,7 @@ public class WordRestController {
             wordList.forEach(word -> word.setLoop(true));
         }
         wordRepository.saveAll(wordList);
-//        if (wordRepository.loopWordsNum() == wordRepository.passedWordsNum()) wordRepository.init();
+        if (wordRepository.wordsNum() == wordRepository.ankiWordsNum()) wordRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
 //    @GetMapping("/api/passnum")
