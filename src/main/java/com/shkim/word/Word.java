@@ -20,18 +20,20 @@ public class Word {
     private int number;
 //    private boolean state;
     private boolean anki;
+    private int difficulty;
     private boolean loop;
 
     public Word() {
     }
 
-    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean anki, boolean loop){
+    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean state, boolean anki, int difficulty, boolean loop){
         this.id = id;
         this.kanji = kanji;
         this.reading = reading;
         this.meaning = meaning;
         this.kormeaning = kormeaning;
         this.anki = anki;
+        this.difficulty = difficulty;
         this.loop = loop;
     }
 
@@ -104,5 +106,13 @@ public class Word {
     }
     public void setLoop(boolean loop) {
         this.loop = loop;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 }

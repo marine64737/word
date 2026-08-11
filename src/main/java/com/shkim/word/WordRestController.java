@@ -95,13 +95,6 @@ public class WordRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", wordRepository.count()));
     }
 
-//    @PostMapping("/word/search")
-//    ResponseEntity<?> search(@RequestBody String kanji){
-//        List<Word> words = wordRepository.findByKanjiContaining(kanji);
-//        for (Word word: words) System.out.print(words);
-//        return (words == null)? ResponseEntity.badRequest().body("해당하는 단어가 없습니다.") :
-//                ResponseEntity.ok(words);
-//    }
     @PostMapping("/api/search")
     public ResponseEntity<?> search(@RequestBody Map<String, String> payload) {
         String kanji = payload.get("kanji"); // JSON에서 "kanji" 키의 값만 추출
@@ -130,9 +123,18 @@ public class WordRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", word));
     }
     @Transactional
-    @PostMapping("/word/init")
+    @PostMapping("/api/init")
     ResponseEntity<?> ankiInit(){
         wordRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 초기화 완료", true));
+    }
+    @Transactional
+    @PostMapping("/api/difficult")
+    ResponseEntity<?> difficult(@RequestBody int id){
+        Word word = wordRepository.findById(id).orElseThrow();
+        word.setDifficulty(word.getDifficulty()+1);
+        word.setLoop(false);
+        wordRepository.save(word);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "어려움", word));
     }
 }
