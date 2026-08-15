@@ -26,7 +26,7 @@ public class Word {
     public Word() {
     }
 
-    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean state, boolean anki, int difficulty, boolean loop){
+    public Word(int id, String kanji, String reading, String meaning, String kormeaning, boolean anki, int difficulty, boolean loop){
         this.id = id;
         this.kanji = kanji;
         this.reading = reading;
