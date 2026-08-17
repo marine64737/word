@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface WordRepository extends JpaRepository<Word, Integer> {
 
-    @Query(value = "select id from kanji", nativeQuery = true)
+    @Query(value = "select id from word", nativeQuery = true)
     List<Integer> findIds();
 
     List<Word> findByKanjiContaining(String kanji);
@@ -24,31 +24,31 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     // 한자가 없는 경우(null)를 대비한 체크
     boolean existsByKanjiIsNullAndReading(String reading);
 
-    @Query(value = "SELECT * FROM kanji where anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT * FROM word where anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findShuffled();
 
-    @Query(value = "SELECT * FROM kanji where anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT * FROM word where anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findLoopShuffled();
 
-    @Query(value = "SELECT count(*) FROM kanji", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM word", nativeQuery = true)
     int wordsNum();
 
-//    @Query(value = "SELECT count(*) FROM kanji where loop = true", nativeQuery = true)
+//    @Query(value = "SELECT count(*) FROM word where loop = true", nativeQuery = true)
 //    int passedWordsNum();
 
-    @Query(value = "SELECT count(*) FROM kanji where loop = true", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM word where loop = true", nativeQuery = true)
     int loopWordsNum();
 
-    @Query(value = "SELECT count(*) FROM kanji where anki = true", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM word where anki = true", nativeQuery = true)
     int ankiWordsNum();
 
 //    @Transactional
 //    @Modifying
-//    @Query(value = "update kanji set state = false where anki = false and loop = true", nativeQuery = true)
+//    @Query(value = "update word set state = false where anki = false and loop = true", nativeQuery = true)
 //    void init();
 
     @Transactional
     @Modifying
-    @Query(value = "update kanji set anki = false", nativeQuery = true)
+    @Query(value = "update word set anki = false", nativeQuery = true)
     void ankiInit();
 }
