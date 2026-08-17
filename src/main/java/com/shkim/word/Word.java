@@ -3,9 +3,6 @@ package com.shkim.word;
 import jakarta.persistence.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"kanji", "reading"})
-})
 @Entity
 public class Word {
 
