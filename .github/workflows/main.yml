@@ -25,7 +25,7 @@ jobs:
 
       - name: Deploy
         run: |
-          fuser -k 8081/tcp || true
-          cp build/libs/*.jar /home/ksh/ksh/Word/build/libs
+          fuser -k 8085/tcp || true
+          cp build/libs/*.jar /home/ksh/ksh/kanji/build/libs
           cd /home/ksh/ksh
           docker compose up -d --build
