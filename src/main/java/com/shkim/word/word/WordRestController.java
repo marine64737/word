@@ -1,5 +1,6 @@
-package com.shkim.word;
+package com.shkim.word.word;
 
+import com.shkim.word.common.APIResponse;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,14 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
+@RequestMapping("/word")
 public class WordRestController {
     @Autowired
     WordRepository wordRepository;
@@ -38,10 +38,6 @@ public class WordRestController {
         if (wordRepository.wordsNum() == wordRepository.ankiWordsNum()) wordRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
-//    @GetMapping("/api/passnum")
-//    ResponseEntity<?> passNum(){
-//        return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.passedWordsNum()));
-//    }
     @GetMapping("/api/ankinum")
     ResponseEntity<?> ankiNum(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.ankiWordsNum()));

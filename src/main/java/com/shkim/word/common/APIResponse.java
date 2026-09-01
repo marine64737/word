@@ -1,4 +1,4 @@
-package com.shkim.word;
+package com.shkim.word.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
