@@ -14,7 +14,7 @@ import java.util.Map;
 @CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
-@RequestMapping("/jpkanji")
+@RequestMapping("/api/jpkanji")
 public class KanjiRestController {
     @Autowired
     KanjiRepository kanjiRepository;

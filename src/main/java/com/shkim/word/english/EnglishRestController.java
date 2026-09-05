@@ -12,7 +12,7 @@ import java.util.List;
 @CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
-@RequestMapping("/english")
+@RequestMapping("/api/english")
 public class EnglishRestController {
     @Autowired
     EnglishRepository englishRepository;
