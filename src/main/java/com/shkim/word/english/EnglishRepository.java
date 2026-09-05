@@ -12,7 +12,7 @@ public interface EnglishRepository extends JpaRepository<english, Integer> {
     @Query(value = "select id from english", nativeQuery = true)
     List<Integer> findIds();
 
-    @Query(value = "SELECT * FROM english where anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT * FROM english where anki = false ORDER BY random() LIMIT 20", nativeQuery = true)
     List<english> findShuffled();
 
     @Query(value = "SELECT * FROM english where anki = false and loop = true ORDER BY random() LIMIT 20", nativeQuery = true)
