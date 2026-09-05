@@ -14,7 +14,7 @@ import java.util.Map;
 @CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
-@RequestMapping("/word")
+@RequestMapping("/jpword")
 public class WordRestController {
     @Autowired
     WordRepository wordRepository;

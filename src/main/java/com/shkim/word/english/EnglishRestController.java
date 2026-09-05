@@ -17,12 +17,12 @@ public class EnglishRestController {
     @Autowired
     EnglishRepository englishRepository;
 
-    @GetMapping("/api/all")
-    List<english> callAll(){
-        return englishRepository.findAll();
-    }
+//    @GetMapping("/api/all")
+//    List<english> callAll(){
+//        return englishRepository.findAll();
+//    }
 
-    @GetMapping("/api/all/shuffled")
+    @GetMapping("/all/shuffled")
     ResponseEntity<?> callShuffledAll(){
         List<english> englishList;
         if (englishRepository.loopWordsNum() >= 90){
@@ -36,24 +36,24 @@ public class EnglishRestController {
         if (englishRepository.wordsNum() == englishRepository.ankiWordsNum()) englishRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", englishList));
     }
-    @GetMapping("/api/ankinum")
+    @GetMapping("/ankinum")
     ResponseEntity<?> ankiNum(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", englishRepository.ankiWordsNum()));
     }
 
-    @GetMapping("/api/total")
+    @GetMapping("/total")
     ResponseEntity<?> total(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", englishRepository.count()));
     }
 
     @Transactional
-    @PostMapping("/api/update")
+    @PostMapping("/update")
     ResponseEntity<?> update(@RequestBody english english){
         englishRepository.save(english);
         return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", english));
     }
 
-    @PostMapping("/api/anki")
+    @PostMapping("/anki")
     ResponseEntity<?> anki(@RequestBody int id){
         english english = englishRepository.findById(id).orElseThrow();
         english.setAnki(true);
@@ -62,13 +62,13 @@ public class EnglishRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", english));
     }
     @Transactional
-    @PostMapping("/api/init")
+    @PostMapping("/init")
     ResponseEntity<?> ankiInit(){
         englishRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 초기화 완료", true));
     }
     @Transactional
-    @PostMapping("/api/difficult")
+    @PostMapping("/difficult")
     ResponseEntity<?> difficult(@RequestBody int id){
         english english = englishRepository.findById(id).orElseThrow();
         english.setDifficulty(english.getDifficulty()+1);
