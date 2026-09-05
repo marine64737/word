@@ -14,17 +14,17 @@ import java.util.Map;
 @CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
-@RequestMapping("/api/jpword")
+@RequestMapping("/jpword")
 public class WordRestController {
     @Autowired
     WordRepository wordRepository;
 
-    @GetMapping("/api/all")
+    @GetMapping("/all")
     List<Word> callAll(){
         return wordRepository.findAll();
     }
 
-    @GetMapping("/api/all/shuffled")
+    @GetMapping("/all/shuffled")
     ResponseEntity<?> callShuffledAll(){
         List<Word> wordList;
         if (wordRepository.loopWordsNum() >= 90){
@@ -38,11 +38,11 @@ public class WordRestController {
         if (wordRepository.wordsNum() == wordRepository.ankiWordsNum()) wordRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
-    @GetMapping("/api/ankinum")
+    @GetMapping("/ankinum")
     ResponseEntity<?> ankiNum(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordRepository.ankiWordsNum()));
     }
-    @PostMapping("/api/check")
+    @PostMapping("/check")
     ResponseEntity<?> checkWord(@RequestBody Word word){
         boolean isDuplicate;
 
@@ -65,7 +65,7 @@ public class WordRestController {
     }
 
     @Transactional
-    @PostMapping("/api/save")
+    @PostMapping("/save")
     ResponseEntity<?> saveWord(@RequestBody Word word){
 
         boolean isDuplicate;
@@ -86,12 +86,12 @@ public class WordRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "저장 성공", word));
     }
 
-    @GetMapping("/api/total")
+    @GetMapping("/total")
     ResponseEntity<?> total(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", wordRepository.count()));
     }
 
-    @PostMapping("/api/search")
+    @PostMapping("/search")
     public ResponseEntity<?> search(@RequestBody Map<String, String> payload) {
         String kanji = payload.get("kanji"); // JSON에서 "kanji" 키의 값만 추출
         List<Word> words = wordRepository.findByKanjiContaining(kanji);
@@ -104,13 +104,13 @@ public class WordRestController {
     }
 
     @Transactional
-    @PostMapping("/api/update")
+    @PostMapping("/update")
     ResponseEntity<?> update(@RequestBody Word word){
         wordRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", word));
     }
 
-    @PostMapping("/api/anki")
+    @PostMapping("/anki")
     ResponseEntity<?> anki(@RequestBody int id){
         Word word = wordRepository.findById(id).orElseThrow();
         word.setAnki(true);
@@ -119,13 +119,13 @@ public class WordRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", word));
     }
     @Transactional
-    @PostMapping("/api/init")
+    @PostMapping("/init")
     ResponseEntity<?> ankiInit(){
         wordRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 초기화 완료", true));
     }
     @Transactional
-    @PostMapping("/api/difficult")
+    @PostMapping("/difficult")
     ResponseEntity<?> difficult(@RequestBody int id){
         Word word = wordRepository.findById(id).orElseThrow();
         word.setDifficulty(word.getDifficulty()+1);

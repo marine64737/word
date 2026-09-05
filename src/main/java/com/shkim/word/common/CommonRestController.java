@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
-@RequestMapping("/api/common")
+@RequestMapping("/common")
 public class CommonRestController {
     @Autowired
     CommonRepository commonRepository;
