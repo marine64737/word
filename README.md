@@ -45,6 +45,38 @@
 ## Frontend 파일 시스템: 현재는 한 폴더에 정리, 규모가 커지면 분리 예정
 <img width="121" height="175" alt="image" src="https://github.com/user-attachments/assets/06c92f66-2cd8-45ee-a226-3a1f7a1187e1" />
 
+## nginx 경로 분리 설정
+```xml
+server {
+    listen 80;
+    server_name localhost;
+    # JS 파일 시작 경로 지정(안 하면 브라우저에서 못 찾음)
+    location / {
+        root /usr/share/nginx/html/word;
+    }
+    # 프론트엔드(html 파일 찾는 코드)
+    location /word {
+        root /usr/share/nginx/html/word;
+        index word.html;
+        try_files $uri $uri/ /word.html;
+    }
+    # WORD 프로젝트 API(없으면 DB 못 불러옴)
+    location /word/api {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' '*';
+            return 204;
+        }
+        add_header 'Access-Control-Allow-Origin' '*';
+
+        proxy_pass http://word:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+    # 이하 다른 프로젝트들
+}
+```
 ## 주요 기능
 
   1. 단어 랜덤 출력
