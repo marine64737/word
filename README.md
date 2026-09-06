@@ -61,7 +61,9 @@
 ## 트러블슈팅
 1. html, js의 위치와 nginx location 간 mismatching으로 인한 404 Not Found Error
 2. CSRF 에러: 사용자의 브라우저에서 보낸 토큰과 서버의 토큰이 불일치할 경우 발생
+
 현재 해결된 코드:
+1. Webconfig.Java 추가
 ```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -77,5 +79,9 @@ public class WebConfig implements WebMvcConfigurer {
     }
 }
 ```
-3. 도메인 별 JS가 있고 Main JS가 있는데 override 식으로 중복을 줄여 최적화 시도 중
+2. RestController 별 Annotation 추가
+```java
+@CrossOrigin(value = "https://kshsvr.com/")
+```
+4. 도메인 별 JS가 있고 Main JS가 있는데 override 식으로 중복을 줄여 최적화 시도 중
 
