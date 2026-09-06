@@ -96,9 +96,12 @@ server {
 
 ## 트러블슈팅
 - html, js의 위치와 nginx location 간 mismatching으로 인한 404 Not Found Error
-- CSRF 에러: 사용자의 브라우저에서 보낸 토큰과 서버의 토큰이 불일치할 경우 발생
+- CORS(Cross-Origin Resource Sharing) 에러:
+- 서로 다른 Orgin(도메인) 간의 데이터 및 통신을 할 때 브라우저에서 이를 중지하기 위해 제공하는 기본 보호 기능
+- -> 그래서 브라우저에서 백엔드로 데이터를 요청할 때 백엔드에서 Cross-Origin을 맞춰주어 도메인을 일치시켜야 함.
+- -> 흔히 백엔드와 프론트엔드가 다른 ip 상에 있을 때 사용하며 같은 서버에 있을 경우 불필요. 그러나 에러 방지를 위해 유지 중.
 <details>
-<summary>현재 해결된 코드</summary>
+<summary>해결 코드</summary>
 <div markdown="1">
 
 - Webconfig.Java 추가
