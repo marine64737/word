@@ -83,5 +83,5 @@ public class WebConfig implements WebMvcConfigurer {
 ```java
 @CrossOrigin(value = "https://kshsvr.com/")
 ```
-4. 도메인 별 JS가 있고 Main JS가 있는데 override 식으로 중복을 줄여 최적화 시도 중
+3. 도메인 별 JS가 있고 Main JS가 있는데 override 식으로 중복을 줄여 최적화 시도 중
 
