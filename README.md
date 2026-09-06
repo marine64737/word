@@ -41,6 +41,9 @@
 - 영어 단어
 <img width="826" height="245" alt="image" src="https://github.com/user-attachments/assets/d2c56513-2b16-4921-b4b3-3df17dfdcf57" />
 
+## Frontend 파일 시스템: 현재는 한 폴더에 정리, 규모가 커지면 분리 예정
+<img width="121" height="175" alt="image" src="https://github.com/user-attachments/assets/06c92f66-2cd8-45ee-a226-3a1f7a1187e1" />
+
 ## 주요 기능
 
   1. 단어 랜덤 출력
