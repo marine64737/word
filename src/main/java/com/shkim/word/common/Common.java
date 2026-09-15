@@ -19,4 +19,8 @@ public class Common {
     private Long id;
 
     private int status;
+
+    private int jlpt;
+
+    private int grade;
 }

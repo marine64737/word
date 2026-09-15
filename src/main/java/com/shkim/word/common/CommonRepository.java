@@ -10,8 +10,24 @@ public interface CommonRepository extends JpaRepository<Common, Long> {
     @Query("SELECT c.status FROM Common c WHERE c.id = :id")
     int findStatusById(@Param("id") Long id);
 
+    @Query("SELECT c.jlpt FROM Common c WHERE c.id = :id")
+    int findJlptById(@Param("id") Long id);
+
+    @Query("SELECT c.grade FROM Common c WHERE c.id = :id")
+    int findGradeById(@Param("id") Long id);
+
     @Transactional
     @Modifying
     @Query("UPDATE Common c SET c.status = :status WHERE c.id = :id")
     void updateStatusById(@Param("id") Long id, @Param("status") int status);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Common c SET c.jlpt = :jlpt WHERE c.id = :id")
+    void updateJlptById(@Param("id") Long id, @Param("jlpt") int jlpt);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Common c SET c.grade = :grade WHERE c.id = :id")
+    void updateGradeById(@Param("id") Long id, @Param("grade") int grade);
 }

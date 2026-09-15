@@ -1,6 +1,7 @@
 package com.shkim.word.kanji;
 
 import com.shkim.word.common.APIResponse;
+import com.shkim.word.common.CommonRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,47 +15,56 @@ import java.util.Map;
 @CrossOrigin(value = "https://kshsvr.com/")
 @Slf4j
 @RestController
-@RequestMapping("/jpkanji")
+@RequestMapping("/kanji")
 public class KanjiRestController {
     @Autowired
     KanjiRepository kanjiRepository;
 
-//    @GetMapping("/all")
-//    List<Kanji> callAll(){
-//        return kanjiRepository.findAll();
-//    }
+    @Autowired
+    CommonRepository commonRepository;
 
-    @GetMapping("/all/shuffled")
-    ResponseEntity<?> callShuffledAll(){
+    @GetMapping("/api/all")
+    List<Kanji> callAll(){
+        return kanjiRepository.findAll();
+    }
+
+    @GetMapping("/api/all/shuffled")
+    ResponseEntity<?> callShuffledAll(@RequestBody int id){
         List<Kanji> wordList;
         if (kanjiRepository.loopWordsNum() >= 90){
             wordList = kanjiRepository.findLoopShuffled();
         }
         else {
-            wordList = kanjiRepository.findShuffled();
+            wordList = kanjiRepository.findShuffled(id);
             wordList.forEach(word -> word.setLoop(true));
         }
+        if (kanjiRepository.nonAnkiWordsNum(id) == 0) {
+            commonRepository.updateJlptById((long) id, commonRepository.findJlptById((long) id) - 1);
+        }
         kanjiRepository.saveAll(wordList);
-        if (kanjiRepository.wordsNum() == kanjiRepository.ankiWordsNum()) kanjiRepository.ankiInit();
+        if (kanjiRepository.wordsNum() == kanjiRepository.ankiWordsNum()) {
+            kanjiRepository.ankiInit();
+            commonRepository.updateJlptById((long) id, 5);
+        }
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
-    @GetMapping("/ankinum")
+    @GetMapping("/api/ankinum")
     ResponseEntity<?> ankiNum(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", kanjiRepository.ankiWordsNum()));
     }
-    @GetMapping("/total")
+    @GetMapping("/api/total")
     ResponseEntity<?> total(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", kanjiRepository.count()));
     }
 
     @Transactional
-    @PostMapping("/update")
+    @PostMapping("/api/update")
     ResponseEntity<?> update(@RequestBody Kanji word){
         kanjiRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", word));
     }
 
-    @PostMapping("/anki")
+    @PostMapping("/api/anki")
     ResponseEntity<?> anki(@RequestBody int id){
         Kanji word = kanjiRepository.findById(id).orElseThrow();
         word.setAnki(true);
@@ -63,13 +73,13 @@ public class KanjiRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", word));
     }
     @Transactional
-    @PostMapping("/init")
+    @PostMapping("/api/init")
     ResponseEntity<?> ankiInit(){
         kanjiRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 초기화 완료", true));
     }
     @Transactional
-    @PostMapping("/difficult")
+    @PostMapping("/api/difficult")
     ResponseEntity<?> difficult(@RequestBody int id){
         Kanji word = kanjiRepository.findById(id).orElseThrow();
         word.setDifficulty(word.getDifficulty()+1);

@@ -24,4 +24,28 @@ public class CommonRestController {
         commonRepository.updateStatusById(common.getId(), common.getStatus());
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
     }
+
+    @PostMapping("/api/getjlpt")
+    ResponseEntity<?> getJlpt(@RequestBody int id){
+        int jlpt = commonRepository.findJlptById((long) id);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", jlpt));
+    }
+
+    @PostMapping("/api/setjlpt")
+    ResponseEntity<?> setJlpt(@RequestBody Common common) {
+        commonRepository.updateJlptById(common.getId(), common.getJlpt());
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
+    }
+
+    @PostMapping("/api/getgrade")
+    ResponseEntity<?> getGrade(@RequestBody int id){
+        int grade = commonRepository.findGradeById((long) id);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", grade));
+    }
+
+    @PostMapping("/api/setgrade")
+    ResponseEntity<?> setGrade(@RequestBody Common common) {
+        commonRepository.updateGradeById(common.getId(), common.getGrade());
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
+    }
 }
