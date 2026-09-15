@@ -23,12 +23,12 @@ public class KanjiRestController {
     @Autowired
     CommonRepository commonRepository;
 
-    @GetMapping("/api/all")
+    @GetMapping("/all")
     List<Kanji> callAll(){
         return kanjiRepository.findAll();
     }
 
-    @GetMapping("/api/all/shuffled")
+    @GetMapping("/all/shuffled")
     ResponseEntity<?> callShuffledAll(@RequestBody int id){
         List<Kanji> wordList;
         if (kanjiRepository.loopWordsNum() >= 90){
@@ -48,23 +48,23 @@ public class KanjiRestController {
         }
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
-    @GetMapping("/api/ankinum")
+    @GetMapping("/ankinum")
     ResponseEntity<?> ankiNum(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", kanjiRepository.ankiWordsNum()));
     }
-    @GetMapping("/api/total")
+    @GetMapping("/total")
     ResponseEntity<?> total(){
         return ResponseEntity.ok().body(new APIResponse<>(true, "조회 성공", kanjiRepository.count()));
     }
 
     @Transactional
-    @PostMapping("/api/update")
+    @PostMapping("/update")
     ResponseEntity<?> update(@RequestBody Kanji word){
         kanjiRepository.save(word);
         return ResponseEntity.ok().body(new APIResponse<>(true, "수정 성공", word));
     }
 
-    @PostMapping("/api/anki")
+    @PostMapping("/anki")
     ResponseEntity<?> anki(@RequestBody int id){
         Kanji word = kanjiRepository.findById(id).orElseThrow();
         word.setAnki(true);
@@ -73,13 +73,13 @@ public class KanjiRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 성공", word));
     }
     @Transactional
-    @PostMapping("/api/init")
+    @PostMapping("/init")
     ResponseEntity<?> ankiInit(){
         kanjiRepository.ankiInit();
         return ResponseEntity.ok().body(new APIResponse<>(true, "암기 초기화 완료", true));
     }
     @Transactional
-    @PostMapping("/api/difficult")
+    @PostMapping("/difficult")
     ResponseEntity<?> difficult(@RequestBody int id){
         Kanji word = kanjiRepository.findById(id).orElseThrow();
         word.setDifficulty(word.getDifficulty()+1);
