@@ -28,7 +28,7 @@ public class KanjiRestController {
         return kanjiRepository.findAll();
     }
 
-    @GetMapping("/all/shuffled")
+    @PostMapping("/all/shuffled")
     ResponseEntity<?> callShuffledAll(@RequestBody int id){
         List<Kanji> wordList;
         if (kanjiRepository.loopWordsNum() >= 90){
