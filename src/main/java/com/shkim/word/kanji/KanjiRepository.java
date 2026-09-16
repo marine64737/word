@@ -3,6 +3,7 @@ package com.shkim.word.kanji;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -24,8 +25,8 @@ public interface KanjiRepository extends JpaRepository<Kanji, Integer> {
     // 한자가 없는 경우(null)를 대비한 체크
     boolean existsByKanjiIsNullAndReading(String reading);
 
-    @Query(value = "SELECT * FROM kanji where anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
-    List<Kanji> findShuffled();
+    @Query(value = "SELECT * FROM kanji where anki = false and jlpt >= (select jlpt from common where id = :id) ORDER BY random() LIMIT 10", nativeQuery = true)
+    List<Kanji> findShuffled(@Param("id") int id);
 
     @Query(value = "SELECT * FROM kanji where anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Kanji> findLoopShuffled();
@@ -38,6 +39,9 @@ public interface KanjiRepository extends JpaRepository<Kanji, Integer> {
 
     @Query(value = "SELECT count(*) FROM kanji where anki = true", nativeQuery = true)
     int ankiWordsNum();
+
+    @Query(value = "SELECT count(*) FROM kanji where anki = false and loop = false and jlpt >= (select jlpt from common where id = :id)", nativeQuery = true)
+    int nonAnkiWordsNum(@Param("id") int id);
 
     @Transactional
     @Modifying

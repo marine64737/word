@@ -17,10 +17,10 @@ public class EnglishRestController {
     @Autowired
     EnglishRepository englishRepository;
 
-    @GetMapping("/all")
-    List<english> callAll(){
-        return englishRepository.findAll();
-    }
+//    @GetMapping("/api/all")
+//    List<english> callAll(){
+//        return englishRepository.findAll();
+//    }
 
     @GetMapping("/all/shuffled")
     ResponseEntity<?> callShuffledAll(){

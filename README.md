@@ -1,2 +1,132 @@
-# word
+# 단어장 사이트
 
+
+## 프로젝트 개요
+
+- 개인 프로젝트
+- 프로젝트 명: 단어 암기 사이트
+- 구성: Spring Boot Rest API + Pure HTML + JavaScript
+- 도메인: 일본어 단어, 일본어 한자, 영어 단어(추가 가능)
+- 기능:
+  1. 단어 랜덤 생성으로 단어 자체에 대한 암기 용이
+  2. 버튼 클릭에 의하여 도메인 간 비동기 전환이 가능하여 빠른 토글 가능
+
+
+## 프로젝트 기간
+
+- 2026.04 하순 초안 제작, 이후~ (진행 중)
+- 이전까지 도메인 별로 프로젝트 별도로 생성하다가 2026.09 초순에 프로젝트 통합 후 웹 페이지 하나에서 사용하도록 전환.
+- 다중 사용자 기능 및 도메인 추가 가능
+- JUnit, mockmvc 등 테스트 코드 추가 예정
+
+## 개발 환경
+
+- Language: Java 17
+- Framework: Spring Boot 3.5
+- Build Tool: Gradle
+- DB: Postgres(Docker)
+- Template: Pure HTML + JavaScript
+- 기타: JDBC
+
+---
+## 시스템 구조
+
+## Scheme
+- 일본어 단어
+<img width="827" height="332" alt="image" src="https://github.com/user-attachments/assets/23c8a42a-9fb0-4fbe-b03e-56e5bf28c242" />
+
+- 일본어 한자
+<img width="826" height="296" alt="image" src="https://github.com/user-attachments/assets/62fa1e89-ad97-45b4-880e-6b79bcf5ce1b" />
+
+- 영어 단어
+<img width="833" height="274" alt="image" src="https://github.com/user-attachments/assets/49334729-ba25-4c20-b660-0e03a58ae138" />
+
+
+## Frontend 파일 시스템: 현재는 한 폴더에 정리, 규모가 커지면 분리 예정
+<img width="121" height="175" alt="image" src="https://github.com/user-attachments/assets/06c92f66-2cd8-45ee-a226-3a1f7a1187e1" />
+
+## nginx 경로 분리 설정
+```xml
+server {
+    listen 80;
+    server_name localhost;
+    # JS 파일 시작 경로 지정(안 하면 브라우저에서 못 찾음)
+    location / {
+        root /usr/share/nginx/html/word;
+    }
+    # 프론트엔드(html 파일 찾는 코드)
+    location /word {
+        root /usr/share/nginx/html/word;
+        index word.html;
+        try_files $uri $uri/ /word.html;
+    }
+    # WORD 프로젝트 API(없으면 DB 못 불러옴)
+    location /word/api {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' '*';
+            return 204;
+        }
+        add_header 'Access-Control-Allow-Origin' '*';
+
+        proxy_pass http://word:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+    # 이하 다른 프로젝트들
+}
+```
+## 주요 기능
+
+  1. 단어 랜덤 출력
+     - 일본어 단어, 일본어 한자: 10개
+     - 영어 단어: 20개(페이지를 덜 차지하여 개수를 늘림)
+  3. 랜덤 출력하며 loop 상태를 true로 전환
+  4. loop = true인 단어가 90개 이상이 되면 무한 반복
+  5. 단어 암기 시 해당 단어 loop -> false, 암기 상태 -> true 전환
+  6. 단어 랜덤 출력하여 loop = true인 단어가 90개 이상이 될 때까지 새로운 단어 출력
+
+## 실행 및 테스트 방법
+
+1. `Git clone` 후, `application.yml` 또는 `application.properties` 설정
+2. DB 연동 (postgres)
+3. 로컬에서 실행: `./gradlew bootRun`
+4. 브라우저 접속: `http://localhost:8081/`
+
+## 트러블슈팅
+- html, js의 위치와 nginx location 간 mismatching으로 인한 404 Not Found Error
+- CORS(Cross-Origin Resource Sharing) 에러:
+- 서로 다른 Orgin(도메인) 간의 데이터 및 통신을 할 때 브라우저에서 이를 중지하기 위해 제공하는 기본 보호 기능
+- -> 그래서 브라우저에서 백엔드로 데이터를 요청할 때 백엔드에서 Cross-Origin을 맞춰주어 도메인을 일치시켜야 함.
+- -> 흔히 백엔드와 프론트엔드가 다른 ip 상에 있을 때 사용하며 같은 서버에 있을 경우 불필요. 그러나 에러 방지를 위해 유지 중.
+<details>
+<summary>해결 코드</summary>
+<div markdown="1">
+
+- Webconfig.Java 추가
+  
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("https://kshsvr.com/") // 허용할 출처
+//                .allowedOrigins("http://localhost:8080") // 허용할 출처 -> 8081로 수정 예정
+                .allowedMethods("GET", "POST") // 허용할 HTTP method
+//                .allowedHeaders("*")
+                .allowCredentials(true) // 쿠키 인증 요청 허용
+                .maxAge(3000); // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
+    }
+}
+```
+- RestController 별 Annotation 추가
+
+```java
+@CrossOrigin(value = "https://kshsvr.com/")
+```
+</div>
+</details>
+
+- 도메인 별 JS가 있고 Main JS가 있는데 override 식으로 중복을 줄여 최적화 시도 중
