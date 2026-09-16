@@ -13,13 +13,13 @@ public class CommonRestController {
     @Autowired
     CommonRepository commonRepository;
 
-    @PostMapping("/api/getstatus")
+    @PostMapping("/getstatus")
     ResponseEntity<?> getStatus(@RequestBody int id){
         int status = commonRepository.findStatusById((long) id);
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", status));
     }
 
-    @PostMapping("/api/setstatus")
+    @PostMapping("/setstatus")
     ResponseEntity<?> setStatus(@RequestBody Common common) {
         commonRepository.updateStatusById(common.getId(), common.getStatus());
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
