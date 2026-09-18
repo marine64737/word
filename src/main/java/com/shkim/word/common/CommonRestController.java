@@ -25,25 +25,25 @@ public class CommonRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
     }
 
-    @PostMapping("/api/getjlpt")
+    @PostMapping("/getjlpt")
     ResponseEntity<?> getJlpt(@RequestBody int id){
         int jlpt = commonRepository.findJlptById((long) id);
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", jlpt));
     }
 
-    @PostMapping("/api/setjlpt")
+    @PostMapping("/setjlpt")
     ResponseEntity<?> setJlpt(@RequestBody CommonKanjiDTO common) {
         commonRepository.updateJlptById(common.getId(), common.getJlpt());
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
     }
 
-    @PostMapping("/api/getword")
+    @PostMapping("/getword")
     ResponseEntity<?> getWord(@RequestBody int id){
         int word = commonRepository.findWordById((long) id);
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", word));
     }
 
-    @PostMapping("/api/setword")
+    @PostMapping("/setword")
     ResponseEntity<?> setGrade(@RequestBody CommonWordDTO common) {
         commonRepository.updateWordById(common.getId(), common.getWord());
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
