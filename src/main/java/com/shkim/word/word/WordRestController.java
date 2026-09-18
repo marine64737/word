@@ -28,7 +28,7 @@ public class WordRestController {
         return wordRepository.findAll();
     }
 
-    @GetMapping("/all/shuffled")
+    @PostMapping("/all/shuffled")
     ResponseEntity<?> callShuffledAll(@RequestBody int id){
         List<Word> wordList;
         if (wordRepository.loopWordsNum() >= 90){
