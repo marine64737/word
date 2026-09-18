@@ -25,7 +25,7 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     // 한자가 없는 경우(null)를 대비한 체크
     boolean existsByKanjiIsNullAndReading(String reading);
 
-    @Query(value = "SELECT * FROM word where anki = false and jlpt >= (select jlpt from common where id = :id) ORDER BY random() LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT * FROM word where anki = false and jlpt >= (select word from common where id = :id) ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findShuffled(@Param("id") int id);
 
     @Query(value = "SELECT * FROM word where anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
