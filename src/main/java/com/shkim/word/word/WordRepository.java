@@ -3,6 +3,7 @@ package com.shkim.word.word;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -24,8 +25,8 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     // 한자가 없는 경우(null)를 대비한 체크
     boolean existsByKanjiIsNullAndReading(String reading);
 
-    @Query(value = "SELECT * FROM word where anki = false ORDER BY random() LIMIT 10", nativeQuery = true)
-    List<Word> findShuffled();
+    @Query(value = "SELECT * FROM word where anki = false and jlpt >= (select jlpt from common where id = :id) ORDER BY random() LIMIT 10", nativeQuery = true)
+    List<Word> findShuffled(@Param("id") int id);
 
     @Query(value = "SELECT * FROM word where anki = false and loop = true ORDER BY random() LIMIT 10", nativeQuery = true)
     List<Word> findLoopShuffled();
@@ -47,8 +48,12 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 //    @Query(value = "update word set state = false where anki = false and loop = true", nativeQuery = true)
 //    void init();
 
+    @Query(value = "SELECT count(*) FROM word where anki = false and loop = false and jlpt >= (select word from common where id = :id)", nativeQuery = true)
+    int nonAnkiWordsNum(@Param("id") int id);
+
     @Transactional
     @Modifying
-    @Query(value = "update word set anki = false", nativeQuery = true)
+    @Query(value = "update word set anki = false and loop = false", nativeQuery = true)
     void ankiInit();
+
 }

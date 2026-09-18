@@ -22,5 +22,5 @@ public class Common {
 
     private int jlpt;
 
-    private int grade;
+    private int word;
 }

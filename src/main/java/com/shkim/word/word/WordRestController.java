@@ -1,6 +1,7 @@
 package com.shkim.word.word;
 
 import com.shkim.word.common.APIResponse;
+import com.shkim.word.common.CommonRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,23 +20,32 @@ public class WordRestController {
     @Autowired
     WordRepository wordRepository;
 
+    @Autowired
+    CommonRepository commonRepository;
+
     @GetMapping("/all")
     List<Word> callAll(){
         return wordRepository.findAll();
     }
 
     @GetMapping("/all/shuffled")
-    ResponseEntity<?> callShuffledAll(){
+    ResponseEntity<?> callShuffledAll(@RequestBody int id){
         List<Word> wordList;
         if (wordRepository.loopWordsNum() >= 90){
             wordList = wordRepository.findLoopShuffled();
         }
         else {
-            wordList = wordRepository.findShuffled();
+            wordList = wordRepository.findShuffled(id);
             wordList.forEach(word -> word.setLoop(true));
         }
+        if (wordRepository.nonAnkiWordsNum(id) == 0) {
+            commonRepository.updateWordById((long) id, commonRepository.findWordById((long) id) - 1);
+        }
         wordRepository.saveAll(wordList);
-        if (wordRepository.wordsNum() == wordRepository.ankiWordsNum()) wordRepository.ankiInit();
+        if (wordRepository.wordsNum() == wordRepository.ankiWordsNum()) {
+            wordRepository.ankiInit();
+            commonRepository.updateWordById((long) id, 5);
+        }
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", wordList));
     }
     @GetMapping("/ankinum")

@@ -37,15 +37,15 @@ public class CommonRestController {
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
     }
 
-    @PostMapping("/api/getgrade")
-    ResponseEntity<?> getGrade(@RequestBody int id){
-        int grade = commonRepository.findGradeById((long) id);
-        return ResponseEntity.ok().body(new APIResponse<>(true, "success", grade));
+    @PostMapping("/api/getword")
+    ResponseEntity<?> getWord(@RequestBody int id){
+        int word = commonRepository.findWordById((long) id);
+        return ResponseEntity.ok().body(new APIResponse<>(true, "success", word));
     }
 
-    @PostMapping("/api/setgrade")
-    ResponseEntity<?> setGrade(@RequestBody CommonGradeDTO common) {
-        commonRepository.updateGradeById(common.getId(), common.getGrade());
+    @PostMapping("/api/setword")
+    ResponseEntity<?> setGrade(@RequestBody CommonWordDTO common) {
+        commonRepository.updateWordById(common.getId(), common.getWord());
         return ResponseEntity.ok().body(new APIResponse<>(true, "success", common));
     }
 }

@@ -45,6 +45,6 @@ public interface KanjiRepository extends JpaRepository<Kanji, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "update kanji set anki = false", nativeQuery = true)
+    @Query(value = "update kanji set anki = false and loop = false", nativeQuery = true)
     void ankiInit();
 }
